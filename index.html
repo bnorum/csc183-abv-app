@@ -9,15 +9,15 @@
     <h1>ABV Calculator</h1>
     <p>Calculate the total alcohol by volume (ABV) of your drinks.</p>
     <div>
-        <p>Weight:</p><input type="number"> 
-        <input type="radio" name="weight" id="weight" value="lbs">lbs
-        <input type="radio" name="weight" id="weight" value="kg">kg
+        <p>Weight:</p><input type="number" id="weightnumber"> 
+        <input type="radio" name="weight" id="weight" value="1" checked>lbs
+        <input type="radio" name="weight" id="weight" value=".455">kg
     </div>
-    <input type="radio" name="gender" id="gender" value="Male">Male
-    <input type="radio" name="gender" id="gender" value="Female" checked>Female
+    <input type="radio" name="gender" id="gender" value="0.73" checked>Male
+    <input type="radio" name="gender" id="gender" value="0.66">Female
     <ul id="hours">
         <li id="hour">
-            <div>
+            <div style="display:inline;">
                 <select id="dropdown">
                     <option value="">Select an Alcoholic Beverage</option>
                     <optgroup label="Liquor">
@@ -25,15 +25,22 @@
                         <option value="75">1.5oz Whiskey (50% ABV)</option>
                     </optgroup>
                     <optgroup label="Beer">
-                        <option value="48">12oz Beer (4% ABV)</option>
+                        <option value="60">12oz Beer (5% ABV)</option>
                         <option value="84">12oz IPA (7% ABV)</option>
                     <optgroup label="Hard Seltzer">
                         <option value="48">12oz Hard Seltzer (4% ABV)</option>
                     </optgroup>
                 </select>
                 <input type="number" id="number">
-                <span id="totalabv">0</span>
+            
+                <p>Standard Drinks:&nbsp;</p>
+                <p id="totalabv">0</p>
+                <p>&nbsp;Current BAC:&nbsp;</p>
+                <p id="totalbac">0</p>
+            
+                
             </div>
+            <button> Add another drink </button>
         </li>
     </ul>
     <button onclick="dropdownChange()">calculate</button>
