@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ABV Calculator</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="script.js"></script>
+</head>
+<body>
+    <h1>ABV Calculator</h1>
+    <p>Calculate the total alcohol by volume (ABV) of your drinks.</p>
+    <div>
+        <p>Weight:</p><input type="number"> 
+        <input type="radio" name="weight" id="weight" value="lbs">lbs
+        <input type="radio" name="weight" id="weight" value="kg">kg
+    </div>
+    <input type="radio" name="gender" id="gender" value="Male">Male
+    <input type="radio" name="gender" id="gender" value="Female" checked>Female
+    <ul id="hours">
+        <li id="hour">
+            <div>
+                <select id="dropdown">
+                    <option value="">Select an Alcoholic Beverage</option>
+                    <optgroup label="Liquor">
+                        <option value="60">1.5oz Vodka (40% ABV)</option>
+                        <option value="75">1.5oz Whiskey (50% ABV)</option>
+                    </optgroup>
+                    <optgroup label="Beer">
+                        <option value="48">12oz Beer (4% ABV)</option>
+                        <option value="84">12oz IPA (7% ABV)</option>
+                    <optgroup label="Hard Seltzer">
+                        <option value="48">12oz Hard Seltzer (4% ABV)</option>
+                    </optgroup>
+                </select>
+                <input type="number" id="number">
+                <span id="totalabv">0</span>
+            </div>
+        </li>
+    </ul>
+    <button onclick="dropdownChange()">calculate</button>
+    <br>
+
+</body>
+</html>
