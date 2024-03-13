@@ -30,7 +30,7 @@ function removeDrink(id) {
 function calculateBAC() {
   var gender = document.getElementById("gender").value;
   var weight = parseFloat(document.getElementById("weight").value);
-  var weightUnit = document.getElementById("weight-unit").value;
+  var weightUnit = document.querySelector('input[name="weight-unit"]:checked').value;//get checked value
   if (weightUnit === "lbs") {
       weight *= 0.453592; // Convert pounds to kilograms
   }
@@ -55,7 +55,7 @@ function calculateBAC() {
       totalAlcConsumed += alcConsumed;
   });
 
-  var bac = totalAlcConsumed;
+  var bac = totalAlcConsumed / 10; //somewhere in my calculations, I multiplied by 100, so I need to divide by 10 to get the correct BAC
 
   if (bac < 0) {
     bac = 0;
