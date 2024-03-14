@@ -8,7 +8,12 @@ function addDrink() {
   newDrinkItem.innerHTML = `
       <h3>Drink ${newDrinkId}</h3>
       <label for="alcohol">Alcohol Percentage:</label>
-      <input type="number" class="alcohol" min="0" step="any"><br><br>
+      <select class="alcohol">
+                    <option value="5">Beer, Hard Seltzer (5%)</option>
+                    <option value="7">Malt Liquor (7%)</option>
+                    <option value="12">Table Wine (12%)</option>
+                    <option value="40">Distilled Spirit (40%)</option>
+      </select><br><br>
       <label for="volume">Volume:</label>
       <input type="number" class="volume" min="0" step="any">
       <select class="volume-unit">
@@ -30,6 +35,7 @@ function removeDrink(id) {
 function calculateBAC() {
   var gender = document.getElementById("gender").value;
   var weight = parseFloat(document.getElementById("weight").value);
+  if (weight <= 0) weight = 1;
   var weightUnit = document.querySelector('input[name="weight-unit"]:checked').value;//get checked value
   if (weightUnit === "lbs") {
       weight *= 0.453592; // Convert pounds to kilograms
@@ -51,6 +57,7 @@ function calculateBAC() {
         var r = 0.55;
       } //if gender is male, r = 0.68, else r = 0.55
       var standardDrinkAmount = (volume * alcoholPercentage/100 * 0.789)
+      if (time < 0) time = 0;
       var alcConsumed = standardDrinkAmount / (weight * r) - (0.015 * time); 
       totalAlcConsumed += alcConsumed;
   });
