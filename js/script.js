@@ -42,7 +42,7 @@ function calculateBAC() {
   }
   var drinks = document.querySelectorAll(".drink-item");
   var totalAlcConsumed = 0;
-
+  var totalPureAlcohol = 0;
   drinks.forEach(function(drink) {
       var alcoholPercentage = parseFloat(drink.querySelector(".alcohol").value); //percent
       var volume = parseFloat(drink.querySelector(".volume").value); //amount
@@ -56,10 +56,11 @@ function calculateBAC() {
       } else {
         var r = 0.55;
       } //if gender is male, r = 0.68, else r = 0.55
-      var standardDrinkAmount = (volume * alcoholPercentage/100 * 0.789)
       if (time < 0) time = 0;
-      var alcConsumed = standardDrinkAmount / (weight * r) - (0.015 * time); 
+      var alcConsumed = (volume * alcoholPercentage/100 * 0.789) / (weight * r) - (0.015 * time); 
       totalAlcConsumed += alcConsumed;
+
+      totalPureAlcohol += volume * (alcoholPercentage/100);
   });
 
   var bac = totalAlcConsumed / 10; //somewhere in my calculations, I multiplied by 100, so I need to divide by 10 to get the correct BAC
@@ -69,8 +70,8 @@ function calculateBAC() {
   }
 
   // Convert BAC to percentage
-  if (!isNaN(bac) && bac!=null) { //honestly dont know which works
-    document.getElementById("result").innerHTML = "Your Blood Alcohol Content (BAC) is: " + bac.toFixed(3) + "%";
+  if (!isNaN(bac) && bac!=null) { 
+    document.getElementById("result").innerHTML = "You've drank a total of " + totalPureAlcohol.toFixed(3) + "oz of pure alcohol. Your Blood Alcohol Content (BAC) is: " + bac.toFixed(3) + "%";
   } else {
     alert("Please fill in all fields!");
   }
