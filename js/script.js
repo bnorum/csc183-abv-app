@@ -14,14 +14,14 @@ function addDrink() {
                     <option value="12">Table Wine (12%)</option>
                     <option value="40">Distilled Spirit (40%)</option>
       </select><br><br>
-      <label for="volume">Volume:</label>
       <input type="number" class="volume" min="0" step="any">
-      <select class="volume-unit">
-         <option value="fl-oz">fl oz</option>
-          <option value="ml">ml</option>
-      </select><br><br>
-      <label for="time">Time since drink (hours):</label>
-      <input type="number" class="time" min="0" step="any"><br><br>
+      <label for="volume">fl oz</label><br><br>
+      <label for="time">Time since drink:</label>
+      <input type="number" class="time" min="0" step="any">
+      <select class="time-unit">
+          <option value="hours">hours</option>
+          <option value="minutes" selected>minutes</option>
+      </select>
       <button onclick="removeDrink(${newDrinkId})">Remove</button>
   `;
   drinkList.appendChild(newDrinkItem);
@@ -33,37 +33,55 @@ function removeDrink(id) {
 }
 
 function calculateBAC() {
+  var bac = 0;
   var gender = document.getElementById("gender").value;
   var weight = parseFloat(document.getElementById("weight").value);
-  if (weight <= 0) weight = 1;
+  var timeUnit = document.querySelector('select.time-unit').value;
+  
+  if (weight <= 0) weight = 1; //dont divide by zero
   var weightUnit = document.querySelector('input[name="weight-unit"]:checked').value;//get checked value
-  if (weightUnit === "lbs") {
-      weight *= 0.453592; // Convert pounds to kilograms
+  if (weightUnit === "kg") {
+      weight /= 0.453592; // Convert pounds to kilograms
   }
   var drinks = document.querySelectorAll(".drink-item");
   var totalAlcConsumed = 0;
   var totalPureAlcohol = 0;
   drinks.forEach(function(drink) {
+    var alcoholPercentage = parseFloat(drink.querySelector(".alcohol").value); //percent
+    var volume = parseFloat(drink.querySelector(".volume").value); //amount
+    var pureAlcohol = volume * (alcoholPercentage/100);
+    totalPureAlcohol += pureAlcohol;
+  });
+
+  var lvlOfAlcoholism = 0;
+  var totalStandardDrinks = totalPureAlcohol / .6;
+  var typeOfDrinker = "Sober";
+  if ((gender === "male" && totalStandardDrinks <= 2) ||(gender === "female" && totalStandardDrinks <= 1)) {lvlOfAlcoholism = .012; typeOfDrinker = "Light";}
+  else if ((gender === "male" && totalStandardDrinks <= 4) ||(gender === "female" && totalStandardDrinks <= 3)) {lvlOfAlcoholism = .017;typeOfDrinker = "Moderate"}
+  else {lvlOfAlcoholism = .02;typeOfDrinker="Heavy"}
+  //determine level of alcoholism
+  
+
+  drinks.forEach(function(drink) {
       var alcoholPercentage = parseFloat(drink.querySelector(".alcohol").value); //percent
       var volume = parseFloat(drink.querySelector(".volume").value); //amount
-      var volumeUnit = drink.querySelector(".volume-unit").value; //unit  of amount
-      if (volumeUnit === "fl-oz") {
-          volume *= 29.5735; // Convert fluid ounces to milliliters
-      }
+      var pureAlcohol = volume * (alcoholPercentage/100);
+
       var time = parseFloat(drink.querySelector(".time").value);
+      if (timeUnit === "minutes") { time /=60;}
       if (gender === "male") {
         var r = 0.68;
       } else {
         var r = 0.55;
       } //if gender is male, r = 0.68, else r = 0.55
-      if (time < 0) time = 0;
-      var alcConsumed = (volume * alcoholPercentage/100 * 0.789) / (weight * r) - (0.015 * time); 
-      totalAlcConsumed += alcConsumed;
+      if (time < 0) time = 0; //check time for negative
+      var addedBac = ((pureAlcohol/.6 * 14) / (weight * 453.592 * r)) * 100 - (lvlOfAlcoholism* time); //added bac
 
-      totalPureAlcohol += volume * (alcoholPercentage/100);
+      bac += addedBac;
+
+      
   });
 
-  var bac = totalAlcConsumed / 10; //somewhere in my calculations, I multiplied by 100, so I need to divide by 10 to get the correct BAC
 
   if (bac < 0) {
     bac = 0;
@@ -71,9 +89,23 @@ function calculateBAC() {
 
   // Convert BAC to percentage
   if (!isNaN(bac) && bac!=null) { 
-    document.getElementById("result").innerHTML = "You've drank a total of " + totalPureAlcohol.toFixed(3) + "oz of pure alcohol. Your Blood Alcohol Content (BAC) is: " + bac.toFixed(3) + "%";
+    document.getElementById("result").innerHTML = "You've drank a total of " + totalPureAlcohol.toFixed(2) + " fl oz of pure alcohol. <br><br> That's " + totalStandardDrinks.toFixed(1)+" standard drinks. You're a " + typeOfDrinker+" drinker. <br><br> Your Blood Alcohol Content (BAC) is: " + bac.toFixed(3) + "%";
   } else {
     alert("Please fill in all fields!");
   }
+
+  var image = document.createElement("img");
+  var existingImage = document.querySelector("#image-container img");
+  if (existingImage) {
+    existingImage.src = "images/light-drinker.jpg";
+  } else {
+    var image = document.createElement("img");
+    if (typeOfDrinker === "Light") image.src = "images/light-drinker.jpg";
+    else if (typeOfDrinker === "Moderate") image.src = "images/moderate-drinker.jpg";
+    else image.src = "images/heavy-drinker.png";
+    
+    document.getElementById("image-container").appendChild(image);
+  }
+  
   
 }

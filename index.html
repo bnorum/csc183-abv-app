@@ -6,44 +6,47 @@
     <script src="js/script.js"></script>
 </head>
 <body>
-
-    <div id="bac-form">
-        <h2>Blood Alcohol Content (BAC) Calculator</h2>
-        <label for="gender">Gender:</label>
-        <select id="gender">
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-        </select><br><br>
-        
-        <label for="weight">Weight:</label>
-        <input type="number" id="weight" min="0" step="any">
-        <label for="weight-unit">Weight Unit:</label>
-        <input type="radio" id="lbs" name="weight-unit" value="lbs" checked>
-        <label for="lbs">lbs</label>
-        <input type="radio" id="kg" name="weight-unit" value="kg">
-        <label for="kg">kg</label><br><br>
-        <div id="drink-list">
-            <div class="drink-item">
-                <h3>Drink 1</h3>
-                <label for="alcohol">Alcohol Percentage:</label>
-                <select class="alcohol">
-                    <option value="5">Beer, Hard Seltzer (5%)</option>
-                    <option value="7">Malt Liquor (7%)</option>
-                    <option value="12">Table Wine (12%)</option>
-                    <option value="40">Distilled Spirit (40%)</option>
-                </select><br><br>
-                <input type="number" class="volume" min="0" step="any">
-                <select class="volume-unit">
-                    <option value="fl-oz">fl oz</option>
-                    <option value="ml">ml</option>
-                </select><br><br>
-                <label for="time">Time since drink (hours):</label>
-                <input type="number" class="time" min="0" step="any"><br><br>
+        <div id="bac-form">
+            <h2>Blood Alcohol Content (BAC) Calculator</h2>
+            <label for="gender">Gender:</label>
+            <select id="gender">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select><br><br>
+            
+            <label for="weight">Weight:</label>
+            <input type="number" id="weight" min="0" step="any">
+            <label for="weight-unit">Weight Unit:</label>
+            <input type="radio" id="lbs" name="weight-unit" value="lbs" checked>
+            <label for="lbs">lbs</label>
+            <input type="radio" id="kg" name="weight-unit" value="kg">
+            <label for="kg">kg</label><br><br>
+            <div id="drink-list">
+                <div class="drink-item">
+                    <h3>Drink 1</h3>
+                    <label for="alcohol">Alcohol Percentage:</label>
+                    <select class="alcohol">
+                        <option value="5">Beer, Hard Seltzer (5%)</option>
+                        <option value="7">Malt Liquor (7%)</option>
+                        <option value="12">Table Wine (12%)</option>
+                        <option value="40">Distilled Spirit (40%)</option>
+                    </select><br><br>
+                    <input type="number" class="volume" min="0" step="any">
+                    <label for="volume">fl oz</label><br><br>
+                    <label for="time">Time since drink:</label>
+                    <input type="number" class="time" min="0" step="any">
+                    <select class="time-unit">
+                        <option value="hours">hours</option>
+                        <option value="minutes" selected>minutes</option>
+                    </select>
+                </div>
             </div>
+            <button onclick="addDrink()">Add Another Drink</button><br><br>
+            <button onclick="calculateBAC()">Calculate BAC</button>
+            <div id="result"></div>
+            <div id="image-container" class="drinker-image"></div>
         </div>
-        <button onclick="addDrink()">Add Another Drink</button><br><br>
-        <button onclick="calculateBAC()">Calculate BAC</button>
-        <div id="result"></div>
-    </div>
+        <img class="standard-drink-info" src="images/standarddrinks.png">
+</body>
     
 </html>
