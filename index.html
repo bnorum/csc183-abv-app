@@ -6,8 +6,21 @@
     <script src="js/script.js"></script>
 </head>
 <body>
+    <div class="header">
+        <h1>BAC CALCULATOR</h1>
+    </div>
+    <div class="inline">
+        <img class="standard-drink-info" src="images/standarddrinks.png">
         <div id="bac-form">
             <h2>Blood Alcohol Content (BAC) Calculator</h2>
+            <p>
+                Curious about why I organized it this way? 
+                This web app was design to track drinking as a night continues, 
+                rather than at one given time. A beer isn't always in a bottle,
+                and sometimes they're left unfinished. This is a tool to keep 
+                track of drinks, and to encourage drinking in moderation.
+                
+            </p>
             <label for="gender">Gender:</label>
             <select id="gender">
                 <option value="male">Male</option>
@@ -21,6 +34,12 @@
             <label for="lbs">lbs</label>
             <input type="radio" id="kg" name="weight-unit" value="kg">
             <label for="kg">kg</label><br><br>
+            <label for="time">Time since first drink:</label>
+                    <input type="number" class="time" min="0" step="any">
+                    <select class="time-unit">
+                        <option value="hours">hours</option>
+                        <option value="minutes" selected>minutes</option>
+                    </select>
             <div id="drink-list">
                 <div class="drink-item">
                     <h3>Drink 1</h3>
@@ -33,20 +52,18 @@
                     </select><br><br>
                     <input type="number" class="volume" min="0" step="any">
                     <label for="volume">fl oz</label><br><br>
-                    <label for="time">Time since drink:</label>
-                    <input type="number" class="time" min="0" step="any">
-                    <select class="time-unit">
-                        <option value="hours">hours</option>
-                        <option value="minutes" selected>minutes</option>
-                    </select>
+                    
                 </div>
             </div>
             <button onclick="addDrink()">Add Another Drink</button><br><br>
             <button onclick="calculateBAC()">Calculate BAC</button>
             <div id="result"></div>
-            <div id="image-container" class="drinker-image"></div>
+            
         </div>
-        <img class="standard-drink-info" src="images/standarddrinks.png">
+        <div id="image-container">
+            <img src="images/drink.png">
+        </div>
+    </div>
 </body>
     
 </html>

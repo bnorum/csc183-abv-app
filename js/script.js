@@ -16,12 +16,6 @@ function addDrink() {
       </select><br><br>
       <input type="number" class="volume" min="0" step="any">
       <label for="volume">fl oz</label><br><br>
-      <label for="time">Time since drink:</label>
-      <input type="number" class="time" min="0" step="any">
-      <select class="time-unit">
-          <option value="hours">hours</option>
-          <option value="minutes" selected>minutes</option>
-      </select>
       <button onclick="removeDrink(${newDrinkId})">Remove</button>
   `;
   drinkList.appendChild(newDrinkItem);
@@ -44,7 +38,6 @@ function calculateBAC() {
       weight /= 0.453592; // Convert pounds to kilograms
   }
   var drinks = document.querySelectorAll(".drink-item");
-  var totalAlcConsumed = 0;
   var totalPureAlcohol = 0;
   drinks.forEach(function(drink) {
     var alcoholPercentage = parseFloat(drink.querySelector(".alcohol").value); //percent
@@ -52,36 +45,32 @@ function calculateBAC() {
     var pureAlcohol = volume * (alcoholPercentage/100);
     totalPureAlcohol += pureAlcohol;
   });
-
+  
+  //determine level of alcoholism
   var lvlOfAlcoholism = 0;
-  var totalStandardDrinks = totalPureAlcohol / .6;
+  var totalStandardDrinks = (totalPureAlcohol / .6).toFixed(0);
   var typeOfDrinker = "Sober";
   if ((gender === "male" && totalStandardDrinks <= 2) ||(gender === "female" && totalStandardDrinks <= 1)) {lvlOfAlcoholism = .012; typeOfDrinker = "Light";}
   else if ((gender === "male" && totalStandardDrinks <= 4) ||(gender === "female" && totalStandardDrinks <= 3)) {lvlOfAlcoholism = .017;typeOfDrinker = "Moderate"}
-  else {lvlOfAlcoholism = .02;typeOfDrinker="Heavy"}
-  //determine level of alcoholism
+  else if ((gender === "male" && totalStandardDrinks > 4) ||(gender === "female" && totalStandardDrinks > 3)){lvlOfAlcoholism = .02;typeOfDrinker="Heavy"}
+  
   
 
   drinks.forEach(function(drink) {
       var alcoholPercentage = parseFloat(drink.querySelector(".alcohol").value); //percent
       var volume = parseFloat(drink.querySelector(".volume").value); //amount
       var pureAlcohol = volume * (alcoholPercentage/100);
-
-      var time = parseFloat(drink.querySelector(".time").value);
-      if (timeUnit === "minutes") { time /=60;}
-      if (gender === "male") {
-        var r = 0.68;
-      } else {
-        var r = 0.55;
-      } //if gender is male, r = 0.68, else r = 0.55
-      if (time < 0) time = 0; //check time for negative
-      var addedBac = ((pureAlcohol/.6 * 14) / (weight * 453.592 * r)) * 100 - (lvlOfAlcoholism* time); //added bac
-
-      bac += addedBac;
+      
 
       
-  });
+      if (gender === "male") { var r = 0.68; } else { var r = 0.55; } //if gender is male, r = 0.68, else r = 0.55
 
+      var addedBac = ((pureAlcohol/.6 * 14) / (weight * 453.592 * r)) * 100; //added bac
+      bac += addedBac;
+  });
+  var time =parseFloat(document.querySelector(".time").value);
+  if (timeUnit === "minutes") time /=60;
+  bac -= lvlOfAlcoholism * time;
 
   if (bac < 0) {
     bac = 0;
@@ -89,7 +78,7 @@ function calculateBAC() {
 
   // Convert BAC to percentage
   if (!isNaN(bac) && bac!=null) { 
-    document.getElementById("result").innerHTML = "You've drank a total of " + totalPureAlcohol.toFixed(2) + " fl oz of pure alcohol. <br><br> That's " + totalStandardDrinks.toFixed(1)+" standard drinks. You're a " + typeOfDrinker+" drinker. <br><br> Your Blood Alcohol Content (BAC) is: " + bac.toFixed(3) + "%";
+    document.getElementById("result").innerHTML = "You've drank a total of " + totalPureAlcohol.toFixed(2) + " fl oz of pure alcohol. <br><br> That's " + totalStandardDrinks+" standard drinks. You're a " + typeOfDrinker+" drinker. <br><br> Your Blood Alcohol Content (BAC) is: " + bac.toFixed(3) + "%";
   } else {
     alert("Please fill in all fields!");
   }
@@ -97,12 +86,14 @@ function calculateBAC() {
   var image = document.createElement("img");
   var existingImage = document.querySelector("#image-container img");
   if (existingImage) {
-    existingImage.src = "images/light-drinker.jpg";
+    if (typeOfDrinker === "Light") existingImage.src = "images/light-drinker.jpg";
+    else if (typeOfDrinker === "Moderate") existingImage.src = "images/moderate-drinker.jpg";
+    else if (typeOfDrinker === "Heavy") existingImage.src = "images/heavy-drinker.png";
   } else {
     var image = document.createElement("img");
     if (typeOfDrinker === "Light") image.src = "images/light-drinker.jpg";
     else if (typeOfDrinker === "Moderate") image.src = "images/moderate-drinker.jpg";
-    else image.src = "images/heavy-drinker.png";
+    else if (typeOfDrinker === "Heavy") image.src = "images/heavy-drinker.png";
     
     document.getElementById("image-container").appendChild(image);
   }
